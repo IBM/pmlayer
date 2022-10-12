@@ -1,2 +1,14 @@
-# pmlayer
-To make open source our codes related to our paper, which will be published in NeurIPS 2022.
+# Monotone Layers
+
+How to use
+```
+cd sample/torch
+python sample_2d.py
+```
+
+
+
+# Citation
+
+Please consider citing this paper.
+- H. Yanagisawa, K. Miyaguchi, and T. Katsuki, "Hierarchical Lattice Layer for Partially Monotone Regression," NeurIPS 2022.
