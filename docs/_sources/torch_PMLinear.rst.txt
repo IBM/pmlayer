@@ -1,0 +1,58 @@
+pmlayer.torch.layers.PMLinear
+==================================
+
+Linear layer with partially monotone constraints for PyTorch.
+
+.. code-block:: python
+
+    class PMLinear(
+        num_input_dims,
+        num_output_dims=1,
+        indices_increasing=[],
+        indices_decreasing=[],
+        use_bias=True)
+
+This layer applies a linear transformation to the incoming data :math:`y=Ax+b`.
+The output of this layer is monotonically increasing with respect to the input features specified by ``indices_increasing``, and
+the output of this layer is monotonically decreasing with respect to the input features specified by ``indices_decreasing``.
+
+
+Parameters
+---------------------------------
+
+=================== =============== ===================================================================================
+Args                Type            Description
+=================== =============== ===================================================================================
+num_input_dims      int             The number of input features.
+num_output_dims     int             The number of output features.  Default: ``1``.
+indices_increasing  list of int     | The list of indices of monotonically increasing features.
+                                    | Default: ``[]``.
+indices_decreasing  list of int     | The list of indices of monotonically decreasing features.
+                                    | Default: ``[]``.
+use_bias            bool            | If set to ``False``, the layer will not learn an additive bias.
+                                    | Default: ``True``.
+=================== =============== ===================================================================================
+
+
+Shape
+---------------------------------
+
+==================== ==============================================================
+I/O                  Shape
+==================== ==============================================================
+Input                (N, num_input_dims)
+Output               (N, num_output_dims)
+==================== ==============================================================
+
+
+Example
+---------------------------------
+
+The following code outputs ``(128,5)``.
+
+.. code-block:: python
+
+    l = PMLinear(10, 5, indices_increasing=[2,3])
+    x = torch.randn(128, 10)
+    y = l(x)
+    print(y.shape)

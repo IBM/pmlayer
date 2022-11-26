@@ -3,7 +3,7 @@
 How to use
 ```
 cd sample/torch
-python sample_2d.py
+python sample_2d_square.py
 ```
 
 

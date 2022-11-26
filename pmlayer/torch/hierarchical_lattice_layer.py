@@ -34,13 +34,23 @@ class MultiLinearInterpolation:
             coef.append(torch.prod(self.mesh_size[i+1:]))
         self.coef = torch.tensor(coef, dtype=torch.long)
 
+    def _clamp(self, coordinates_int):
+        # set minimum of coordinates_int to 0
+        coordinates_int[coordinates_int < 0] = 0
+        # set maximum of coordinates_int less than self.mesh_size-1
+        for i, s in enumerate(self.mesh_size):
+            ub = s-1
+            temp = coordinates_int[:,i]
+            temp[temp >= ub] = ub-1
+        return coordinates_int
+
     def get_index(self, coordinates):
         '''
         Parameters
         ----------
         coordinates : Tensor
             coordinates.shape = [batchsize, len(self.mesh_size)]
-            Each number in coordinates must be in range [0,1)
+            Each number in coordinates must be in range [0,1]
 
         Returns
         -------
@@ -55,7 +65,7 @@ class MultiLinearInterpolation:
 
         coordinates = coordinates * (self.mesh_size-1)
         coordinates_int = coordinates.to(torch.long)
-        coordinates_int = torch.clamp(coordinates_int, min=0)
+        coordinates_int = self._clamp(coordinates_int)
         coordinates_frac = coordinates - coordinates_int
         return coordinates_int, coordinates_frac
 
@@ -137,38 +147,34 @@ class HLattice(nn.Module):
     '''
 
     def __init__(self,
-                 lattice_sizes,
-                 monotonicities,
+                 num_input_dims,
+                 lattice_sizes = [],
+                 indices_increasing = [],
                  neural_network=None):
         super().__init__()
         '''
         Parameters
         ----------
+        num_input_dims : int
+            The number of input features
+
         lattice_sizes : list of integer
             Specifies the granularity of lattice for each input feature
             Each number must be at least 2
             Numbers corresponding to non-monotone features are ignored
 
-        monotonicities : list of integer or str
-            Specifies the monotonicity of each input feature
+        indices_increasing : list of indices
+            The list of indices of monotonically increasing features.
         '''
 
         # create map table
-        indices = util.parse_monotonicities(monotonicities,
-                                            len(lattice_sizes))
-        if len(indices[1]) > 0:  # if len(idx_dec) > 0
-            message = 'HLattice does not support decreasing function'
-            raise ValueError(message, monotonicities)
-        input_len = len(indices[2])  # len(idx_none)
-        mesh_size = []
-        output_len = 1  # @note can be computed by math.prod
-        cols_monotone = [ False for i in range(len(monotonicities)) ]
-        for idx in indices[0]:  # for idx in idx_inc:
+        input_len = num_input_dims - len(indices_increasing)
+        output_len = 1
+        cols_monotone = [ False ] * num_input_dims
+        for idx, size in zip(indices_increasing, lattice_sizes):
             cols_monotone[idx] = True
-            size = lattice_sizes[idx]
             output_len *= size
-            mesh_size.append(size)
-        self.mli = MultiLinearInterpolation(mesh_size)
+        self.mli = MultiLinearInterpolation(lattice_sizes)
         self.map_table = self._create_map_table()
 
         # initialize neural network

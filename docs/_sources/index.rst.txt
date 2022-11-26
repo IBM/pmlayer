@@ -1,0 +1,41 @@
+.. pmlayer documentation master file, created by
+   sphinx-quickstart on Thu Oct  6 14:33:51 2022.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Documentation of pmlayer
+=======================================
+
+``pmlayer`` provides a set of partially monotone layers for PyTorch.
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Overview:
+
+   overview
+   howtouse
+
+How to install
+
+.. code-block:: shell
+
+    pip install pmlayer
+
+Relevant paper: `H. Yanagisawa, K. Miyaguchi, and T. Katsuki, "Hierarchical Lattice Layer for Partially Monotone Regression," NeurIPS 2022. <https://openreview.net/forum?id=zAuiZpZ478l>`_
+
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Tutorial:
+
+   tutorial_torch_HLattice
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: API Reference:
+
+   torch_HLattice
+   torch_PiecewiseLinear
+   torch_PMLinear

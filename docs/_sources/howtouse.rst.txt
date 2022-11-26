@@ -1,0 +1,24 @@
+How to Use
+=======================================
+
+Install
+-----------
+
+How to install
+
+.. code-block:: shell
+
+    pip install pmlayer
+
+Open Source
+-----------
+
+Source codes are available at https://github.com/IBM/pmlayer
+
+
+Citation
+-----------
+
+This paper explains the technical details of ``pmlayer``.
+
+`H. Yanagisawa, K. Miyaguchi, and T. Katsuki, "Hierarchical Lattice Layer for Partially Monotone Regression," NeurIPS 2022. <https://openreview.net/forum?id=zAuiZpZ478l>`_

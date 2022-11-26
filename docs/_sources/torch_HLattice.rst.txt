@@ -1,0 +1,53 @@
+pmlayer.torch.layers.HLattice
+==================================
+
+Hierarchical lattice layer with partially monotone constraints for PyTorch.
+
+.. code-block:: python
+
+    class HLattice(
+        num_input_dims,
+        lattice_sizes = [],
+        indices_increasing = [],
+        neural_network=None)
+
+This layer is a hierarchically structured lattice layer to handle partial monotonicity constraints.
+
+
+Parameters
+---------------------------------
+
+=================== =============== ===================================================================================
+Args                Type            Description
+=================== =============== ===================================================================================
+num_input_dims      int             The number of input features.
+lattice_sizes       list of int     | The list of sizes of monotonically increasing features.
+                                    | Default: ``[]``.
+indices_increasing  list of int     | The list of indices of monotonically increasing features.
+                                    | Default: ``[]``.
+neural_network      neural network  Neural network.  Default: ``None``.
+=================== =============== ===================================================================================
+
+
+Shape
+---------------------------------
+
+==================== ==============================================================
+I/O                  Shape
+==================== ==============================================================
+Input                (N, num_input_dims)
+Output               (N, 1)
+==================== ==============================================================
+
+
+Example
+---------------------------------
+
+The following code outputs ``(128,1)``.
+
+.. code-block:: python
+
+    l = HLattice(10, indices_increasing=[2,3])
+    x = torch.randn(128, 10)
+    y = l(x)
+    print(y.shape)

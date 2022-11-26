@@ -1,0 +1,64 @@
+pmlayer.torch.layers.PiecewiseLinear
+=======================================
+
+Monotonically increasing piese-wise linear layer for PyTorch.
+
+.. code-block:: python
+
+    class PiecewiseLinear(
+        input_keypoints,
+        num_dims=1,
+        output_min=0.0,
+        output_max=1.0,
+        indices_increasing=[],
+        indices_decreasing=[],
+        indices_transform=[])
+
+This layer transforms each input feature by using a piecewise linear function.
+The output of this layer is monotonically increasing with respect to the input features specified by ``indices_increasing``, and
+the output of this layer is monotonically decreasing with respect to the input features specified by ``indices_decreasing``.
+
+
+Parameters
+---------------------------------
+
+=================== =============== ===================================================================================
+Args                Type            Description
+=================== =============== ===================================================================================
+input_keypoints     Tensor          The boundaries of input features.
+num_dims            int             The number of input features.
+output_min          float           The minimum value of the output.
+output_max          float           The maximum value of the output.
+indices_increasing  list of int     | The list of indices of monotonically increasing features.
+                                    | Default: ``[]``.
+indices_decreasing  list of int     | The list of indices of monotonically decreasing features.
+                                    | Default: ``[]``.
+indices_transform   list of int     | The list of indices of features that are transformed by using
+                                    | piece-wise linear function without monotonicity constraints.
+                                    | Default: ``[]``.
+=================== =============== ===================================================================================
+
+
+Shape
+---------------------------------
+
+==================== ==============================================================
+I/O                  Shape
+==================== ==============================================================
+Input                (N, num_dims)
+Output               (N, num_dims)
+==================== ==============================================================
+
+
+Example
+---------------------------------
+
+The following code outputs ``(128,10)``.
+
+.. code-block:: python
+
+    b = torch.linspace(0.0, 1.0, steps=5)
+    l = PiecewiseLinear(b, 10, indices_increasing=[2,3])
+    x = torch.randn(128, 10)
+    y = l(x)
+    print(y.shape)

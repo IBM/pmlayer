@@ -1,0 +1,52 @@
+How to use pmlayer.torch.layers.HLattice
+=============================================
+
+We explain how to use ``pmlayer.torch.layers.HLattice``.
+This is a hierarchical lattice layer and it can handle monotonicity constraints.
+
+.. code-block:: python
+
+    import pmlayer.torch.layers.HLattice
+
+    model = HLattice(2,[4,4],[0,1])
+
+In this example, a single HLattice layer is constructed as a prediction model ``model``.
+The first argument shows that this model receives a two-dimensional input, and the second argument shows that the granularity of lattice is 4 for both inputs.
+The third argument designates that the first and second features are monotonically increasing.
+
+The training of this model is equal to the standard neural network.
+We can train the model by using the following code.
+
+.. code-block:: python
+
+    # prepare data
+    a = np.linspace(0.0, 1.0, 10)
+    x1, x2 = np.meshgrid(a, a)
+    y = (x1*x1 + x2*x2) / 2.0
+    x = np.concatenate([x1.reshape(-1,1),x2.reshape(-1,1)], 1)
+    data_x = torch.from_numpy(x.astype(np.float32)).clone()
+    data_y = torch.from_numpy(y.reshape(-1,1).astype(np.float32)).clone()
+
+    # train model
+    loss_function = nn.MSELoss()
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.001)
+    for epoch in range(5000):
+        pred_y = model(data_x)
+        loss = loss_function(pred_y, data_y)
+        model.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+By using the following code, we can verify if the training succeeded or not.
+
+.. code-block:: python
+
+    # plot
+    pred_y_np = pred_y.to('cpu').detach().numpy().copy().reshape(x1.shape)
+    plt.figure(figsize=(4,3))
+    ax = plt.subplot(1, 1, 1)
+    im = ax.contourf(x1, x2, pred_y_np, levels=[0.0,0.2,0.4,0.6,0.8,1.0])
+    plt.subplots_adjust(left=0.1, bottom=0.1, right=0.7, top=0.9)
+    cax = plt.axes([0.8, 0.1, 0.05, 0.8])
+    plt.colorbar(im,cax=cax)
+    plt.show()
