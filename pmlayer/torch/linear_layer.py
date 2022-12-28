@@ -8,7 +8,6 @@ from pmlayer.common import util
 class PMLinear(nn.Module):
     '''
     Linear layer with monotonicity constraints.
-
     Monotonicity can be specified to ensure that the weight of
     corresponding feature is positive or negative.
     '''
@@ -22,21 +21,16 @@ class PMLinear(nn.Module):
         super().__init__()
         '''
         Initialize this layer.
-
         Parameters
         ----------
         num_input_dims : int
             The number of input features
-
         num_output_dims : int
             The number of output features
-
         indices_increasing : list of indices
             The list of indices of monotonically increasing features.
-
         indices_decreasing : list of indices
             The list of indices of monotonically decreasing features.
-
         use_bias : bool
             Indicate if bias is used
         '''
@@ -73,7 +67,6 @@ class PMLinear(nn.Module):
         ----------
         x : Tensor
             x.shape = [*, num_input_dims]
-
         Returns
         -------
         output : Tensor

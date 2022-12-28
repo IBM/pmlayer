@@ -1,21 +1,21 @@
 How to use pmlayer.torch.layers.HLattice
 =============================================
 
-We explain how to use ``pmlayer.torch.layers.HLattice``.
-This is a hierarchical lattice layer and it can handle monotonicity constraints.
+In this tutorial, we demonstrate how to use ``pmlayer.torch.layers.HLattice``.
+You can construct a model that consists of a single ``HLattice`` layer by using the following code.
 
 .. code-block:: python
 
     import pmlayer.torch.layers.HLattice
 
-    model = HLattice(2,[4,4],[0,1])
+    lattice_sizes = torch.tensor([4,4], dtype=torch.long)
+    model = HLattice(2,lattice_sizes,[0,1])
 
-In this example, a single HLattice layer is constructed as a prediction model ``model``.
-The first argument shows that this model receives a two-dimensional input, and the second argument shows that the granularity of lattice is 4 for both inputs.
-The third argument designates that the first and second features are monotonically increasing.
+In this example, the first argument of ``HLattice`` specifies that this model receives a two-dimensional input.
+The second argument specifies that the granularity of lattice is 4 for both inputs.
+The third argument specifies that the output value is monotonically increasing with respect to both of the input features.
 
-The training of this model is equal to the standard neural network.
-We can train the model by using the following code.
+We can train this model by using a standard training method for PyTorch models as shown in the following code.
 
 .. code-block:: python
 
@@ -37,7 +37,7 @@ We can train the model by using the following code.
         loss.backward()
         optimizer.step()
 
-By using the following code, we can verify if the training succeeded or not.
+By using the following code, you can see that the model is appropriately trained to learn the function :math:`f(x,y) = (x^2 + y^2)/2`.
 
 .. code-block:: python
 
@@ -50,3 +50,5 @@ By using the following code, we can verify if the training succeeded or not.
     cax = plt.axes([0.8, 0.1, 0.05, 0.8])
     plt.colorbar(im,cax=cax)
     plt.show()
+
+.. image:: sample_2d_HLattice.png

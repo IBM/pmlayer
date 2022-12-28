@@ -39,9 +39,15 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Tutorial:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Overview:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">What is partially monotone layer?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howtouse.html">How to Use</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorial:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_torch_HLattice.html">How to use pmlayer.torch.layers.HLattice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_torch_PiecewiseLinear.html">How to use pmlayer.torch.layers.PiecewiseLinear</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul class="current">
@@ -49,7 +55,7 @@
 <li class="toctree-l1"><a class="reference internal" href="torch_PiecewiseLinear.html">pmlayer.torch.layers.PiecewiseLinear</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">pmlayer.torch.layers.PMLinear</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#parameters">Parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#shape">Shape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tensor-shape">Tensor Shape</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
 </ul>
 </li>
@@ -143,8 +149,8 @@ the output of this layer is monotonically decreasing with respect to the input f
 </tbody>
 </table>
 </section>
-<section id="shape">
-<h2>Shape<a class="headerlink" href="#shape" title="Permalink to this heading"></a></h2>
+<section id="tensor-shape">
+<h2>Tensor Shape<a class="headerlink" href="#tensor-shape" title="Permalink to this heading"></a></h2>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 24%" />
@@ -164,6 +170,7 @@ the output of this layer is monotonically decreasing with respect to the input f
 </tr>
 </tbody>
 </table>
+<p>N usually represents the batch size.</p>
 </section>
 <section id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h2>

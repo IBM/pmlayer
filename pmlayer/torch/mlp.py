@@ -6,7 +6,6 @@ import torch.nn.functional as F
 class MLP(nn.Module):
     '''
     Multi layer perceptron (MLP)
-
     Sigmoid function is used for the last layer.
     '''
 
@@ -16,10 +15,8 @@ class MLP(nn.Module):
         ----------
         input_len : int
             Length of input
-
         output_len : Tensor
             Length of output
-
         num_neuron : Tensor
             The number of neurons in intemediate layers
         '''
@@ -41,7 +38,6 @@ class MLP(nn.Module):
         ----------
         x : Tensor
             x.shape = [batch_size, input_len]
-
         Returns
         -------
         ret : Tensor

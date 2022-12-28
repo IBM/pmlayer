@@ -1,7 +1,7 @@
 pmlayer.torch.layers.PiecewiseLinear
 =======================================
 
-Monotonically increasing piese-wise linear layer for PyTorch.
+Monotonically increasing piesewise linear layer for PyTorch.
 
 .. code-block:: python
 
@@ -17,7 +17,7 @@ Monotonically increasing piese-wise linear layer for PyTorch.
 This layer transforms each input feature by using a piecewise linear function.
 The output of this layer is monotonically increasing with respect to the input features specified by ``indices_increasing``, and
 the output of this layer is monotonically decreasing with respect to the input features specified by ``indices_decreasing``.
-
+The parameter ``input_keypoints`` specifies the knots of the piecewise linear function.
 
 Parameters
 ---------------------------------
@@ -39,7 +39,7 @@ indices_transform   list of int     | The list of indices of features that are t
 =================== =============== ===================================================================================
 
 
-Shape
+Tensor Shape
 ---------------------------------
 
 ==================== ==============================================================
@@ -48,6 +48,8 @@ I/O                  Shape
 Input                (N, num_dims)
 Output               (N, num_dims)
 ==================== ==============================================================
+
+N usually represents the batch size.
 
 
 Example

@@ -21,7 +21,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="pmlayer.torch.layers.PiecewiseLinear" href="torch_PiecewiseLinear.html" />
-    <link rel="prev" title="How to use pmlayer.torch.layers.HLattice" href="tutorial_torch_HLattice.html" /> 
+    <link rel="prev" title="How to use pmlayer.torch.layers.PiecewiseLinear" href="tutorial_torch_PiecewiseLinear.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,12 +47,13 @@
 <p class="caption" role="heading"><span class="caption-text">Tutorial:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="tutorial_torch_HLattice.html">How to use pmlayer.torch.layers.HLattice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_torch_PiecewiseLinear.html">How to use pmlayer.torch.layers.PiecewiseLinear</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">pmlayer.torch.layers.HLattice</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#parameters">Parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#shape">Shape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tensor-shape">Tensor Shape</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
 </ul>
 </li>
@@ -89,12 +90,16 @@
 <p>Hierarchical lattice layer with partially monotone constraints for PyTorch.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">HLattice</span><span class="p">(</span>
     <span class="n">num_input_dims</span><span class="p">,</span>
-    <span class="n">lattice_sizes</span> <span class="o">=</span> <span class="p">[],</span>
-    <span class="n">indices_increasing</span> <span class="o">=</span> <span class="p">[],</span>
+    <span class="n">lattice_sizes</span><span class="p">,</span>
+    <span class="n">indices_increasing</span><span class="p">,</span>
     <span class="n">neural_network</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This layer is a hierarchically structured lattice layer to handle partial monotonicity constraints.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Each value in the input tensor must be between 0 and 1.</p>
+</div>
 <section id="parameters">
 <h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
 <table class="docutils align-default">
@@ -115,20 +120,12 @@
 <td><p>The number of input features.</p></td>
 </tr>
 <tr class="row-odd"><td><p>lattice_sizes</p></td>
-<td><p>list of int</p></td>
-<td><div class="line-block">
-<div class="line">The list of sizes of monotonically increasing features.</div>
-<div class="line">Default: <code class="docutils literal notranslate"><span class="pre">[]</span></code>.</div>
-</div>
-</td>
+<td><p>Tensor (long)</p></td>
+<td><p>The sizes of monotonically increasing features.</p></td>
 </tr>
 <tr class="row-even"><td><p>indices_increasing</p></td>
 <td><p>list of int</p></td>
-<td><div class="line-block">
-<div class="line">The list of indices of monotonically increasing features.</div>
-<div class="line">Default: <code class="docutils literal notranslate"><span class="pre">[]</span></code>.</div>
-</div>
-</td>
+<td><p>The list of indices of monotonically increasing features.</p></td>
 </tr>
 <tr class="row-odd"><td><p>neural_network</p></td>
 <td><p>neural network</p></td>
@@ -137,8 +134,8 @@
 </tbody>
 </table>
 </section>
-<section id="shape">
-<h2>Shape<a class="headerlink" href="#shape" title="Permalink to this heading"></a></h2>
+<section id="tensor-shape">
+<h2>Tensor Shape<a class="headerlink" href="#tensor-shape" title="Permalink to this heading"></a></h2>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 24%" />
@@ -158,11 +155,13 @@
 </tr>
 </tbody>
 </table>
+<p>N usually represents the batch size.</p>
 </section>
 <section id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h2>
 <p>The following code outputs <code class="docutils literal notranslate"><span class="pre">(128,1)</span></code>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">l</span> <span class="o">=</span> <span class="n">HLattice</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">indices_increasing</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sizes</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+<span class="n">l</span> <span class="o">=</span> <span class="n">HLattice</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">sizes</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">l</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
@@ -175,7 +174,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="tutorial_torch_HLattice.html" class="btn btn-neutral float-left" title="How to use pmlayer.torch.layers.HLattice" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tutorial_torch_PiecewiseLinear.html" class="btn btn-neutral float-left" title="How to use pmlayer.torch.layers.PiecewiseLinear" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="torch_PiecewiseLinear.html" class="btn btn-neutral float-right" title="pmlayer.torch.layers.PiecewiseLinear" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

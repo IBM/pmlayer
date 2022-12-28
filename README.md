@@ -6,7 +6,6 @@ cd sample/torch
 python sample_2d_square.py
 ```
 
-Documents are available at https://ibm.github.io/pmlayer/
 
 
 # Citation

@@ -7,11 +7,14 @@ Hierarchical lattice layer with partially monotone constraints for PyTorch.
 
     class HLattice(
         num_input_dims,
-        lattice_sizes = [],
-        indices_increasing = [],
+        lattice_sizes,
+        indices_increasing,
         neural_network=None)
 
 This layer is a hierarchically structured lattice layer to handle partial monotonicity constraints.
+
+.. note::
+    Each value in the input tensor must be between 0 and 1.
 
 
 Parameters
@@ -21,15 +24,13 @@ Parameters
 Args                Type            Description
 =================== =============== ===================================================================================
 num_input_dims      int             The number of input features.
-lattice_sizes       list of int     | The list of sizes of monotonically increasing features.
-                                    | Default: ``[]``.
-indices_increasing  list of int     | The list of indices of monotonically increasing features.
-                                    | Default: ``[]``.
+lattice_sizes       Tensor (long)   The sizes of monotonically increasing features.
+indices_increasing  list of int     The list of indices of monotonically increasing features.
 neural_network      neural network  Neural network.  Default: ``None``.
 =================== =============== ===================================================================================
 
 
-Shape
+Tensor Shape
 ---------------------------------
 
 ==================== ==============================================================
@@ -39,6 +40,8 @@ Input                (N, num_input_dims)
 Output               (N, 1)
 ==================== ==============================================================
 
+N usually represents the batch size.
+
 
 Example
 ---------------------------------
@@ -47,7 +50,8 @@ The following code outputs ``(128,1)``.
 
 .. code-block:: python
 
-    l = HLattice(10, indices_increasing=[2,3])
+    sizes = torch.tensor([4,4], dtype=torch.long)
+    l = HLattice(10, sizes, [2,3])
     x = torch.randn(128, 10)
     y = l(x)
     print(y.shape)

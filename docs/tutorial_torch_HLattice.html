@@ -17,6 +17,7 @@
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -82,18 +83,18 @@
              
   <section id="how-to-use-pmlayer-torch-layers-hlattice">
 <h1>How to use pmlayer.torch.layers.HLattice<a class="headerlink" href="#how-to-use-pmlayer-torch-layers-hlattice" title="Permalink to this heading"></a></h1>
-<p>We explain how to use <code class="docutils literal notranslate"><span class="pre">pmlayer.torch.layers.HLattice</span></code>.
-This is a hierarchical lattice layer and it can handle monotonicity constraints.</p>
+<p>In this tutorial, we demonstrate how to use <code class="docutils literal notranslate"><span class="pre">pmlayer.torch.layers.HLattice</span></code>.
+You can construct a model that consists of a single <code class="docutils literal notranslate"><span class="pre">HLattice</span></code> layer by using the following code.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pmlayer.torch.layers.HLattice</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">HLattice</span><span class="p">(</span><span class="mi">2</span><span class="p">,[</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">lattice_sizes</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">HLattice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">lattice_sizes</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>In this example, a single HLattice layer is constructed as a prediction model <code class="docutils literal notranslate"><span class="pre">model</span></code>.
-The first argument shows that this model receives a two-dimensional input, and the second argument shows that the granularity of lattice is 4 for both inputs.
-The third argument designates that the first and second features are monotonically increasing.</p>
-<p>The training of this model is equal to the standard neural network.
-We can train the model by using the following code.</p>
+<p>In this example, the first argument of <code class="docutils literal notranslate"><span class="pre">HLattice</span></code> specifies that this model receives a two-dimensional input.
+The second argument specifies that the granularity of lattice is 4 for both inputs.
+The third argument specifies that the output value is monotonically increasing with respect to both of the input features.</p>
+<p>We can train this model by using a standard training method for PyTorch models as shown in the following code.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># prepare data</span>
 <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
 <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
@@ -113,7 +114,7 @@ We can train the model by using the following code.</p>
     <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>By using the following code, we can verify if the training succeeded or not.</p>
+<p>By using the following code, you can see that the model is appropriately trained to learn the function <span class="math notranslate nohighlight">\(f(x,y) = (x^2 + y^2)/2\)</span>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot</span>
 <span class="n">pred_y_np</span> <span class="o">=</span> <span class="n">pred_y</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x1</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
@@ -125,6 +126,7 @@ We can train the model by using the following code.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+<img alt="_images/sample_2d_HLattice.png" src="_images/sample_2d_HLattice.png" />
 </section>
 
 

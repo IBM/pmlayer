@@ -1,8 +1,10 @@
 How to use pmlayer.torch.layers.PiecewiseLinear
 ===================================================
 
-We explain how to use ``pmlayer.torch.layers.PiecewiseLinear``.
-This layer represents a piece-wise linear (PWL) function.
+In this tutorial, we demonstrate how to use ``pmlayer.torch.layers.PiecewiseLinear``.
+This layer transforms each dimension of the input features by using a piece-wise linear (PWL) function.
+
+You can construct a model that consists of a single ``PiecewiseLinear`` layer by using the following code.
 
 .. code-block:: python
 
@@ -10,21 +12,49 @@ This layer represents a piece-wise linear (PWL) function.
     import pmlayer.torch.layers.PiecewiseLinear
 
     boundaries = torch.linspace(0.0, 1.0, 4)
-    model = PiecewiseLinear(boundaries, 2, indices_increasing=[0,1])
+    model = PiecewiseLinear(boundaries, 2, indices_increasing=[0])
 
 In this example, the endpoints of the PWL function is designated by ``boundaries``.
-The size of input feature is 2, and both of them are designated as monotonic features by setting ``indices_increasing=[0,1]``.
+The size of input feature is 2, and the first input is designated as monotonic features by setting ``indices_increasing=[0]``, which means that we do not use the monotonicity constraint for the second input.
+
+We train this model to learn the function :math:`f(x) = 2(x-0.3)^2` for each input by using the following code.
 
 .. code-block:: python
 
-    data_x = torch.randn(batch_size, n_input)
-    data_y = (torch.rand(size=(batch_size, 1)) < 0.5).float()
+    # prepare data
+    x = np.linspace(0.0, 1.0, 10)
+    y = 2.0*(x-0.3)*(x-0.3)
+    x = np.tile(x.reshape(-1,1), 2)
+    y = np.tile(y.reshape(-1,1), 2)
+    data_x = torch.from_numpy(x.astype(np.float32)).clone()
+    data_y = torch.from_numpy(y.astype(np.float32)).clone()
 
+    # train model
     loss_function = nn.MSELoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.001)
-    for epoch in range(5000):
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+    for epoch in range(10000):
         pred_y = model(data_x)
         loss = loss_function(pred_y, data_y)
-        model.zero_grad()
         loss.backward()
         optimizer.step()
+        optimizer.zero_grad()
+
+You can see that the model is appropriately trained to learn the function by using the following code.
+
+.. code-block:: python
+
+    # plot
+    pred_y_np = pred_y.to('cpu').detach().numpy().copy()
+    fig = plt.figure(figsize=(7,3))
+    ax1 = plt.subplot(1, 2, 1)
+    ax2 = plt.subplot(1, 2, 2)
+
+    ax1.set_title('Increasing')
+    ax1.plot(x[:,0], y[:,0], color='gray', linestyle = 'dotted')
+    ax1.plot(x[:,0], pred_y_np[:,0], marker='o')
+    ax2.set_title('Unconstrained')
+    ax2.plot(x[:,1], y[:,1], color='gray', linestyle = 'dotted')
+    ax2.plot(x[:,1], pred_y_np[:,1], marker='o')
+    plt.show()
+
+.. image:: pwl.png

@@ -24,15 +24,16 @@ class MultiLinearInterpolation:
 
         Parameters
         ----------
-        mesh_size : list of integer
+        mesh_size : Tensor
             mesh_size specifies the size of each dimension
         '''
 
-        self.mesh_size = torch.tensor(mesh_size, dtype=torch.long)
+        self.mesh_size = mesh_size
         coef = []
         for i in range(len(mesh_size)):
             coef.append(torch.prod(self.mesh_size[i+1:]))
         self.coef = torch.tensor(coef, dtype=torch.long)
+        self.coef = self.coef.to(mesh_size.device)
 
     def _clamp(self, coordinates_int):
         # set minimum of coordinates_int to 0
@@ -88,9 +89,9 @@ class MultiLinearInterpolation:
 
         coordinates_int, coordinates_frac = self.get_index(coordinates)
         l = [0,1]
-        pred = torch.zeros(coordinates.shape[0])
+        pred = torch.zeros(coordinates.shape[0]).to(coordinates.device)
         for d in itertools.product(l, repeat=coordinates.shape[1]):
-            d = torch.tensor(d, dtype=torch.long)
+            d = torch.tensor(d, dtype=torch.long).to(coordinates.device)
             index = self.coordinate2index(coordinates_int + d).view(-1,1)
             value = torch.gather(mesh_pred, 1, index).view(-1)
             temp = (1-d) - coordinates_frac * (1-d*2)
@@ -148,9 +149,9 @@ class HLattice(nn.Module):
 
     def __init__(self,
                  num_input_dims,
-                 lattice_sizes = [],
-                 indices_increasing = [],
-                 neural_network=None):
+                 lattice_sizes,
+                 indices_increasing,
+                 neural_network = None):
         super().__init__()
         '''
         Parameters
@@ -158,10 +159,9 @@ class HLattice(nn.Module):
         num_input_dims : int
             The number of input features
 
-        lattice_sizes : list of integer
-            Specifies the granularity of lattice for each input feature
+        lattice_sizes : Tensor
+            Specifies the granularity of lattice for each monotone feature
             Each number must be at least 2
-            Numbers corresponding to non-monotone features are ignored
 
         indices_increasing : list of indices
             The list of indices of monotonically increasing features.
@@ -173,7 +173,7 @@ class HLattice(nn.Module):
         cols_monotone = [ False ] * num_input_dims
         for idx, size in zip(indices_increasing, lattice_sizes):
             cols_monotone[idx] = True
-            output_len *= size
+            output_len *= size.item()
         self.mli = MultiLinearInterpolation(lattice_sizes)
         self.map_table = self._create_map_table()
 
@@ -190,7 +190,9 @@ class HLattice(nn.Module):
 
         # set monotonicity
         self.cols_monotone = torch.tensor(cols_monotone)
+        self.cols_monotone = self.cols_monotone.to(lattice_sizes.device)
         self.cols_non_monotone = torch.logical_not(self.cols_monotone)
+        self.cols_non_monotone = self.cols_non_monotone.to(lattice_sizes.device)
 
     def _create_map_table(self):
         '''
@@ -213,10 +215,13 @@ class HLattice(nn.Module):
         # convert coordinates in LUMap into long values
         for node in ret:
             coordinate = torch.tensor(node.coordinate, dtype=torch.long)
+            coordinate = coordinate.to(self.mli.mesh_size.device)
             node.index = self.mli.coordinate2index(coordinate)
             ls = torch.tensor(list(node.lower_set), dtype=torch.long)
+            ls = ls.to(self.mli.mesh_size.device)
             node.lower_index = self.mli.coordinate2index(ls)
             us = torch.tensor(list(node.upper_set), dtype=torch.long)
+            us = us.to(self.mli.mesh_size.device)
             node.upper_index = self.mli.coordinate2index(us)
         return ret
 
@@ -327,16 +332,16 @@ class HLattice(nn.Module):
             return xn
 
         # transform tree structure into estimated grid values
-        out = torch.Tensor(xn.shape)
+        out = torch.Tensor(xn.shape).to(x.device)
         for item in self.map_table:
             if item.lower_index is None:
-                lb = torch.zeros(xn.shape[0])
+                lb = torch.zeros(xn.shape[0], device=x.device)
             else:
                 lb = torch.index_select(out, 1, item.lower_index)
                 lb, _ = torch.max(lb, 1)
                 lb = lb.view(-1)
             if item.upper_index is None:
-                ub = torch.ones(xn.shape[0])
+                ub = torch.ones(xn.shape[0], device=x.device)
             else:
                 ub = torch.index_select(out, 1, item.upper_index)
                 ub, _ = torch.min(ub, 1)

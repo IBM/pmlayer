@@ -1,6 +1,5 @@
-*/__pycache__
-build/
-dist/
+*/__pycache__/
+pmlayer/common/__pycache__/
 pmlayer/torch/__pycache__/
-pmlayer.egg-info/
-sample/torch/lightning_logs/
+pmlayer/torch/layers/__pycache__/
+sample/torch/lightning_logs

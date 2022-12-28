@@ -30,6 +30,7 @@ Relevant paper: `H. Yanagisawa, K. Miyaguchi, and T. Katsuki, "Hierarchical Latt
    :caption: Tutorial:
 
    tutorial_torch_HLattice
+   tutorial_torch_PiecewiseLinear
 
 
 .. toctree::

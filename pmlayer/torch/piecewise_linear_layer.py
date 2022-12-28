@@ -24,8 +24,7 @@ class PiecewiseLinear(nn.Module):
                  output_min=0.0,
                  output_max=1.0,
                  indices_increasing=[],
-                 indices_decreasing=[],
-                 indices_transform=[]):
+                 indices_decreasing=[]):
         '''
         Initialize this layer.
 
@@ -49,11 +48,6 @@ class PiecewiseLinear(nn.Module):
 
         indices_decreasing : list of indices
             The list of indices of monotonically decreasing features.
-
-        indices_transform : list of indices
-            The list of indices of features that are transformed by
-            using piece-wise linear function without monotonicity
-            constraints.
         '''
 
         super().__init__()
@@ -64,7 +58,13 @@ class PiecewiseLinear(nn.Module):
         self.num_dims = num_dims
         self.idx_inc = indices_increasing
         self.idx_dec = indices_decreasing
-        self.idx_tra = indices_transform
+        self.idx_tra = []
+        for i in range(num_dims):
+            if i in self.idx_inc:
+                continue
+            if i in self.idx_dec:
+                continue
+            self.idx_tra.append(i)
         l = len(input_keypoints)
         size_inc = (len(self.idx_inc), l-1)
         size_dec = (len(self.idx_dec), l-1)
@@ -79,6 +79,7 @@ class PiecewiseLinear(nn.Module):
         self.weight_dec = nn.Parameter(initrand_dec)
         self.weight_tra = nn.Parameter(initrand_tra)
         self.softmax = nn.Softmax(dim=1)
+        self.sigmoid = nn.Sigmoid()
 
     def _interpolate(self, keypoints_y, x):
         index = torch.searchsorted(self.keypoints_x, x)
@@ -105,30 +106,33 @@ class PiecewiseLinear(nn.Module):
             ret.shape = [*, num_dims]
         '''
 
-        ret = x
+        ret = torch.ones_like(x)
         diff = self.output_max - self.output_min
-        zeros = torch.zeros(self.num_dims, 1)
 
         # increasing features
         if len(self.idx_inc) > 0:
+            zeros = torch.zeros(len(self.idx_inc), 1,
+                                    device=self.weight_inc.device)
             weights = torch.cumsum(self.softmax(self.weight_inc), dim=1)
             weights = torch.cat((zeros, weights), 1).T
             keypoints_y = diff * weights + self.output_min
-            ret[self.idx_inc] = self._interpolate(keypoints_y,
-                                                  x[self.idx_inc])
+            ret[:,self.idx_inc] *= self._interpolate(keypoints_y,
+                                                     x[:,self.idx_inc])
 
         # decreasing features
         if len(self.idx_dec) > 0:
+            zeros = torch.zeros(len(self.idx_dec), 1,
+                                    device=self.weight_inc.device)
             weights = torch.cumsum(self.softmax(self.weight_dec), dim=1)
             weights = torch.cat((zeros, weights), 1).T
             keypoints_y = -diff * weights + self.output_max
-            ret[self.idx_dec] = self._interpolate(keypoints_y,
-                                                  x[self.idx_dec])
+            ret[:,self.idx_dec] *= self._interpolate(keypoints_y,
+                                                     x[:,self.idx_dec])
 
         # transform features
         if len(self.idx_tra) > 0:
-            keypoints_y = self.softmax(self.weight)
-            ret[self.idx_tra] = self._interpolate(keypoints_y,
-                                                  x[self.idx_tra])
+            keypoints_y = self.sigmoid(self.weight_tra).T
+            ret[:,self.idx_tra] *= self._interpolate(keypoints_y,
+                                                     x[:,self.idx_tra])
 
         return ret
