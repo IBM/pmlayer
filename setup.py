@@ -8,7 +8,7 @@ AUTHOR_EMAIL = 'yanagis@jp.ibm.com'
 URL = 'https://github.com/IBM/pmlayer'
 LICENSE = 'Apache 2.0'
 DOWNLOAD_URL = 'https://github.com/IBM/pmlayer'
-VERSION = '0.2'
+VERSION = '0.3'
 PYTHON_REQUIRES = ">=3.6"
 
 INSTALL_REQUIRES = [
@@ -17,7 +17,9 @@ INSTALL_REQUIRES = [
 ]
 
 PACKAGES = [
-    'pmlayer'
+    'pmlayer',
+    'pmlayer.common',
+    'pmlayer.torch'
 ]
 
 CLASSIFIERS = [
