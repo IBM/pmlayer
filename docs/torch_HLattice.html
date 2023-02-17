@@ -95,18 +95,13 @@
     <span class="n">neural_network</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This layer is a hierarchically structured lattice layer to handle partial monotonicity constraints.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Each value in the input tensor must be between 0 and 1.</p>
-</div>
 <section id="parameters">
 <h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 16%" />
-<col style="width: 13%" />
-<col style="width: 71%" />
+<col style="width: 10%" />
+<col style="width: 8%" />
+<col style="width: 82%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Args</p></th>
@@ -117,11 +112,11 @@
 <tbody>
 <tr class="row-even"><td><p>num_input_dims</p></td>
 <td><p>int</p></td>
-<td><p>The number of input features.</p></td>
+<td><p>The length of input feature vectors.</p></td>
 </tr>
 <tr class="row-odd"><td><p>lattice_sizes</p></td>
 <td><p>Tensor (long)</p></td>
-<td><p>The sizes of monotonically increasing features.</p></td>
+<td><p>The latice sizes of monotonically increasing features.  Each entry corresponds to a monotonically increasing feature, and each entry must be at least 2.</p></td>
 </tr>
 <tr class="row-even"><td><p>indices_increasing</p></td>
 <td><p>list of int</p></td>
@@ -129,7 +124,7 @@
 </tr>
 <tr class="row-odd"><td><p>neural_network</p></td>
 <td><p>neural network</p></td>
-<td><p>Neural network.  Default: <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></td>
+<td><p>Default: <code class="docutils literal notranslate"><span class="pre">None</span></code>.  By setting this parameter, the sub-network internally used in this layer can be replaced.</p></td>
 </tr>
 </tbody>
 </table>
@@ -155,11 +150,15 @@
 </tr>
 </tbody>
 </table>
-<p>N usually represents the batch size.</p>
+<p>N usually corresponds the batch size.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Each value in the input tensor must be between 0 and 1.</p>
+</div>
 </section>
 <section id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h2>
-<p>The following code outputs <code class="docutils literal notranslate"><span class="pre">(128,1)</span></code>.</p>
+<p>The following code transforms input tensor x into output tensor y, and the output (the shape of y) is <code class="docutils literal notranslate"><span class="pre">(128,1)</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sizes</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
 <span class="n">l</span> <span class="o">=</span> <span class="n">HLattice</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">sizes</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>

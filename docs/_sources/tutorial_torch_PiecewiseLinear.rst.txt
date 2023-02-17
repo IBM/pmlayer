@@ -2,22 +2,24 @@ How to use pmlayer.torch.layers.PiecewiseLinear
 ===================================================
 
 In this tutorial, we demonstrate how to use ``pmlayer.torch.layers.PiecewiseLinear``.
-This layer transforms each dimension of the input features by using a piece-wise linear (PWL) function.
+The source code used in this tutorial is available at `github <https://github.com/IBM/pmlayer/blob/main/sample/torch/sample_1d_pwl.py>`_.
 
+The ``PiecewiseLinear`` layer transforms each dimension of the input features by using a piece-wise linear (PWL) function.
 You can construct a model that consists of a single ``PiecewiseLinear`` layer by using the following code.
 
 .. code-block:: python
 
     import torch
-    import pmlayer.torch.layers.PiecewiseLinear
+    from pmlayer.torch.layers import PiecewiseLinear
 
     boundaries = torch.linspace(0.0, 1.0, 4)
     model = PiecewiseLinear(boundaries, 2, indices_increasing=[0])
 
-In this example, the endpoints of the PWL function is designated by ``boundaries``.
-The size of input feature is 2, and the first input is designated as monotonic features by setting ``indices_increasing=[0]``, which means that we do not use the monotonicity constraint for the second input.
+In this example, the endpoints of the PWL function is designated as the ``boundaries`` tensor.
+The constructor of ``PiecewiseLinear`` specifies that the size of input feature vector is 2, and the first input feature is designated as a monotonic feature by setting ``indices_increasing=[0]``.
+This also means that we do not use the monotonicity constraint for the second input feature.
 
-We train this model to learn the function :math:`f(x) = 2(x-0.3)^2` for each input by using the following code.
+We can train this model to learn the function :math:`f(x) = 2(x-0.3)^2` for each input by using the following code.
 
 .. code-block:: python
 
@@ -39,7 +41,7 @@ We train this model to learn the function :math:`f(x) = 2(x-0.3)^2` for each inp
         optimizer.step()
         optimizer.zero_grad()
 
-You can see that the model is appropriately trained to learn the function by using the following code.
+The results of the training can be verified by using the following code.
 
 .. code-block:: python
 
@@ -56,5 +58,9 @@ You can see that the model is appropriately trained to learn the function by usi
     ax2.plot(x[:,1], y[:,1], color='gray', linestyle = 'dotted')
     ax2.plot(x[:,1], pred_y_np[:,1], marker='o')
     plt.show()
+
+In the results, each blue solid line shows the learned function for an input feature and each dotted line shows the ground truth.
+Since the first input feature is designated as a monotonic feature, the neural network model is trained to learn the function under the constraint that the output is a monotonic function.
+In contrast, the second input feature is not designated as a monotonic feature, the neural network model is trained to learn the function without any constraints.
 
 .. image:: pwl.png

@@ -48,6 +48,7 @@
 <p class="caption" role="heading"><span class="caption-text">Tutorial:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="tutorial_torch_HLattice.html">How to use pmlayer.torch.layers.HLattice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_torch_PiecewiseLinear.html">How to use pmlayer.torch.layers.PiecewiseLinear</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
@@ -82,16 +83,11 @@
              
   <section id="what-is-partially-monotone-layer">
 <h1>What is partially monotone layer?<a class="headerlink" href="#what-is-partially-monotone-layer" title="Permalink to this heading"></a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">pmlayer</span></code> provides a set of partially monotone layers for PyTorch.</p>
-<p>Suppose that we want to train a function <span class="math notranslate nohighlight">\(f(x,y) = (x^2 + y^2)/2\)</span> by using a neural network.
-This function is monotonically increasing with <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span>.
-We can learn this function by using a standard neural network, but the monotonicity is not guaranteed.</p>
+<p>Suppose that we want to train a neural network model to learn function <span class="math notranslate nohighlight">\(f(x,y) = (x^2 + y^2)/2\)</span>, which is monotonically increasing with respect to <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span>.
+We can use a standard neural network model to learn this function, but we cannot guarantee that the trained neural network model is monotonically increasing with respect to <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span>.</p>
 <img alt="_images/square_2d.png" src="_images/square_2d.png" />
-<p>The partially monotone layers are designed to handle monotonicity constraints.
-Therefore, the output of these layers is guaranteed as monotonically increasing with respect to <span class="math notranslate nohighlight">\(x\)</span> and  <span class="math notranslate nohighlight">\(y\)</span>.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">HLattice</span></code> layer is the key layer of <code class="docutils literal notranslate"><span class="pre">pmlayer</span></code>.  In this layer, a <span class="math notranslate nohighlight">\(k \times k\)</span> grid is created, where <span class="math notranslate nohighlight">\(k \geq 2\)</span> is a hyperparameter to specify the granularity of the grid.
-Each grid point <span class="math notranslate nohighlight">\(f(x',y')\)</span> is trained to learn the value of the function <span class="math notranslate nohighlight">\(f(x',y')\)</span> and they are trained to satisfy the monotonicity constraints.</p>
-<img alt="_images/square_grid.png" src="_images/square_grid.png" />
+<p><code class="docutils literal notranslate"><span class="pre">pmalyer</span></code> libtray provides several neural network layers to handle monotonicity constraints.
+Therefore, we can construct a neural network model by using <code class="docutils literal notranslate"><span class="pre">pmlayer</span></code> that is guaranteed to be monotonically increasing with respect to <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span>.</p>
 </section>
 
 

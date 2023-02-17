@@ -1,18 +1,10 @@
 What is partially monotone layer?
 =======================================
 
-``pmlayer`` provides a set of partially monotone layers for PyTorch.
-
-Suppose that we want to train a function :math:`f(x,y) = (x^2 + y^2)/2` by using a neural network.
-This function is monotonically increasing with :math:`x` and :math:`y`.
-We can learn this function by using a standard neural network, but the monotonicity is not guaranteed.
+Suppose that we want to train a neural network model to learn function :math:`f(x,y) = (x^2 + y^2)/2`, which is monotonically increasing with respect to :math:`x` and :math:`y`.
+We can use a standard neural network model to learn this function, but we cannot guarantee that the trained neural network model is monotonically increasing with respect to :math:`x` and :math:`y`.
 
 .. image:: square_2d.png
 
-The partially monotone layers are designed to handle monotonicity constraints.
-Therefore, the output of these layers is guaranteed as monotonically increasing with respect to :math:`x` and  :math:`y`.
-
-The ``HLattice`` layer is the key layer of ``pmlayer``.  In this layer, a :math:`k \times k` grid is created, where :math:`k \geq 2` is a hyperparameter to specify the granularity of the grid.
-Each grid point :math:`f(x',y')` is trained to learn the value of the function :math:`f(x',y')` and they are trained to satisfy the monotonicity constraints.
-
-.. image:: square_grid.png
+``pmalyer`` libtray provides several neural network layers to handle monotonicity constraints.
+Therefore, we can construct a neural network model by using ``pmlayer`` that is guaranteed to be monotonically increasing with respect to :math:`x` and :math:`y`.

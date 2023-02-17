@@ -6,7 +6,9 @@
 Documentation of pmlayer
 =======================================
 
-``pmlayer`` provides a set of partially monotone layers for PyTorch.
+Partially monotome layer (``pmlayer``) is a library for neural network models.
+It provides several neural network layers to add monotonicity constraints on neural network models.
+The current library is implemented to be used in PyTorch models.
 
 .. toctree::
    :maxdepth: 1
@@ -16,14 +18,16 @@ Documentation of pmlayer
    howtouse
 
 How to install
+------------------
 
 .. code-block:: shell
 
     pip install pmlayer
 
-Relevant paper: `H. Yanagisawa, K. Miyaguchi, and T. Katsuki, "Hierarchical Lattice Layer for Partially Monotone Regression," NeurIPS 2022. <https://openreview.net/forum?id=zAuiZpZ478l>`_
+Citation
+------------------
 
-
+Please consider citing this paper: `H. Yanagisawa, K. Miyaguchi, and T. Katsuki, "Hierarchical Lattice Layer for Partially Monotone Regression," NeurIPS 2022. <https://openreview.net/forum?id=zAuiZpZ478l>`_
 
 .. toctree::
    :maxdepth: 1
@@ -40,3 +44,4 @@ Relevant paper: `H. Yanagisawa, K. Miyaguchi, and T. Katsuki, "Hierarchical Latt
    torch_HLattice
    torch_PiecewiseLinear
    torch_PMLinear
+

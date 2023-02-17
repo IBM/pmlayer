@@ -3,8 +3,6 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-import sys
-sys.path.append('../../')
 from pmlayer.torch.layers import PiecewiseLinear
 
 

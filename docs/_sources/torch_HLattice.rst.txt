@@ -11,11 +11,6 @@ Hierarchical lattice layer with partially monotone constraints for PyTorch.
         indices_increasing,
         neural_network=None)
 
-This layer is a hierarchically structured lattice layer to handle partial monotonicity constraints.
-
-.. note::
-    Each value in the input tensor must be between 0 and 1.
-
 
 Parameters
 ---------------------------------
@@ -23,10 +18,10 @@ Parameters
 =================== =============== ===================================================================================
 Args                Type            Description
 =================== =============== ===================================================================================
-num_input_dims      int             The number of input features.
-lattice_sizes       Tensor (long)   The sizes of monotonically increasing features.
+num_input_dims      int             The length of input feature vectors.
+lattice_sizes       Tensor (long)   The latice sizes of monotonically increasing features.  Each entry corresponds to a monotonically increasing feature, and each entry must be at least 2.
 indices_increasing  list of int     The list of indices of monotonically increasing features.
-neural_network      neural network  Neural network.  Default: ``None``.
+neural_network      neural network  Default: ``None``.  By setting this parameter, the sub-network internally used in this layer can be replaced.
 =================== =============== ===================================================================================
 
 
@@ -40,13 +35,16 @@ Input                (N, num_input_dims)
 Output               (N, 1)
 ==================== ==============================================================
 
-N usually represents the batch size.
+N usually corresponds the batch size.
+
+.. note::
+    Each value in the input tensor must be between 0 and 1.
 
 
 Example
 ---------------------------------
 
-The following code outputs ``(128,1)``.
+The following code transforms input tensor x into output tensor y, and the output (the shape of y) is ``(128,1)``.
 
 .. code-block:: python
 

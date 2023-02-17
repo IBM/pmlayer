@@ -99,6 +99,7 @@
 </pre></div>
 </div>
 <p>This layer transforms each input feature by using a piecewise linear function.
+Note that the input features are handled individually.
 The output of this layer is monotonically increasing with respect to the input features specified by <code class="docutils literal notranslate"><span class="pre">indices_increasing</span></code>, and
 the output of this layer is monotonically decreasing with respect to the input features specified by <code class="docutils literal notranslate"><span class="pre">indices_decreasing</span></code>.
 The parameter <code class="docutils literal notranslate"><span class="pre">input_keypoints</span></code> specifies the knots of the piecewise linear function.</p>
@@ -182,11 +183,11 @@ The parameter <code class="docutils literal notranslate"><span class="pre">input
 </tr>
 </tbody>
 </table>
-<p>N usually represents the batch size.</p>
+<p>N usually corresponds the batch size.</p>
 </section>
 <section id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h2>
-<p>The following code outputs <code class="docutils literal notranslate"><span class="pre">(128,10)</span></code>.</p>
+<p>The following code transforms input tensor x into output tensor y, and the output (the shape of y) is <code class="docutils literal notranslate"><span class="pre">(128,10)</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">b</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 <span class="n">l</span> <span class="o">=</span> <span class="n">PiecewiseLinear</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">indices_increasing</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>

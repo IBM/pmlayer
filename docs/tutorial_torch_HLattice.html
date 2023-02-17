@@ -84,8 +84,9 @@
   <section id="how-to-use-pmlayer-torch-layers-hlattice">
 <h1>How to use pmlayer.torch.layers.HLattice<a class="headerlink" href="#how-to-use-pmlayer-torch-layers-hlattice" title="Permalink to this heading"></a></h1>
 <p>In this tutorial, we demonstrate how to use <code class="docutils literal notranslate"><span class="pre">pmlayer.torch.layers.HLattice</span></code>.
-You can construct a model that consists of a single <code class="docutils literal notranslate"><span class="pre">HLattice</span></code> layer by using the following code.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pmlayer.torch.layers.HLattice</span>
+The source code used in this tutorial is available at <a class="reference external" href="https://github.com/IBM/pmlayer/blob/main/sample/torch/sample_2d_square.py">github</a>.</p>
+<p>You can construct a model that consists of a single <code class="docutils literal notranslate"><span class="pre">HLattice</span></code> layer by using the following code.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pmlayer.torch.layers</span> <span class="kn">import</span> <span class="n">HLattice</span>
 
 <span class="n">lattice_sizes</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">HLattice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">lattice_sizes</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
@@ -127,6 +128,10 @@ The third argument specifies that the output value is monotonically increasing w
 </pre></div>
 </div>
 <img alt="_images/sample_2d_HLattice.png" src="_images/sample_2d_HLattice.png" />
+<p>We note that this layer constructs a <span class="math notranslate nohighlight">\(k \times k\)</span> grid internally, where <span class="math notranslate nohighlight">\(k \geq 2\)</span> is the hyperparameter used to specify the granularity of the grid.
+In this tutorial, we used <span class="math notranslate nohighlight">\(k=4\)</span> and the following figure shows the grid.
+In the internal structure of <code class="docutils literal notranslate"><span class="pre">HLattice</span></code>, each vertex of the grid is trained to learn the value <span class="math notranslate nohighlight">\(f(x',y')\)</span> of the input function <span class="math notranslate nohighlight">\(f\)</span>, where <span class="math notranslate nohighlight">\((x',y')\)</span> is the coordinate of the vertex, while satisfying the monotonicity constraints.</p>
+<img alt="_images/square_grid.png" src="_images/square_grid.png" />
 </section>
 
 

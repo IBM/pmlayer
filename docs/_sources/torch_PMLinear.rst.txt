@@ -50,7 +50,7 @@ N usually represents the batch size.
 Example
 ---------------------------------
 
-The following code outputs ``(128,5)``.
+The following code transforms input tensor x into output tensor y, and the output (the shape of y) is ``(128,5)``.
 
 .. code-block:: python
 

@@ -2,11 +2,13 @@ How to use pmlayer.torch.layers.HLattice
 =============================================
 
 In this tutorial, we demonstrate how to use ``pmlayer.torch.layers.HLattice``.
+The source code used in this tutorial is available at `github <https://github.com/IBM/pmlayer/blob/main/sample/torch/sample_2d_square.py>`_.
+
 You can construct a model that consists of a single ``HLattice`` layer by using the following code.
 
 .. code-block:: python
 
-    import pmlayer.torch.layers.HLattice
+    from pmlayer.torch.layers import HLattice
 
     lattice_sizes = torch.tensor([4,4], dtype=torch.long)
     model = HLattice(2,lattice_sizes,[0,1])
@@ -52,3 +54,11 @@ By using the following code, you can see that the model is appropriately trained
     plt.show()
 
 .. image:: sample_2d_HLattice.png
+
+
+
+We note that this layer constructs a :math:`k \times k` grid internally, where :math:`k \geq 2` is the hyperparameter used to specify the granularity of the grid.
+In this tutorial, we used :math:`k=4` and the following figure shows the grid.
+In the internal structure of ``HLattice``, each vertex of the grid is trained to learn the value :math:`f(x',y')` of the input function :math:`f`, where :math:`(x',y')` is the coordinate of the vertex, while satisfying the monotonicity constraints.
+
+.. image:: square_grid.png

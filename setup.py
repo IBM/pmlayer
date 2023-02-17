@@ -8,7 +8,7 @@ AUTHOR_EMAIL = 'yanagis@jp.ibm.com'
 URL = 'https://github.com/IBM/pmlayer'
 LICENSE = 'Apache 2.0'
 DOWNLOAD_URL = 'https://github.com/IBM/pmlayer'
-VERSION = '0.5'
+VERSION = '1.0'
 PYTHON_REQUIRES = ">=3.6"
 
 INSTALL_REQUIRES = [
