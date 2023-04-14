@@ -35,6 +35,7 @@ Please consider citing this paper: `H. Yanagisawa, K. Miyaguchi, and T. Katsuki,
 
    tutorial_torch_HLattice
    tutorial_torch_PiecewiseLinear
+   tutorial_auxiliary_network
 
 
 .. toctree::

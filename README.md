@@ -1,8 +1,16 @@
 # Partially Monotone Layer
 
 Partially monotome layer (`pmlayer`) is a library for neural network models.
-It provides sevral neural network layers to add monotonicity constraints on neural network models.
-Documents are available at [https://ibm.github.io/pmlayer/](https://ibm.github.io/pmlayer/)
+It provides several neural network layers to add monotonicity constraints on neural network models.
+Current implementation is available only for PyTorch.
+
+Read the [documentation](https://ibm.github.io/pmlayer/) to get started, and feel free to contact us for any inquiry.
+
+# Installation
+
+You can install `pmlayer` by using the `pip` command:
+
+```pip install pmlayer```
 
 
 # Citation

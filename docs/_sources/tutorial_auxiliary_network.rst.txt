@@ -1,0 +1,47 @@
+How to use custom auxiliary neural network in pmlayer.torch.layers.HLattice
+=============================================================================
+
+In this tutorial, we demonstrate how to use a custom auxiliary neural network in ``pmlayer.torch.layers.HLattice``.
+The source code used in this tutorial is available at `github <https://github.com/IBM/pmlayer/blob/main/sample/torch/sample_auxiliary_network.py>`_.
+
+To handle monotonicity constraints, an auxiliary neural network is use in ``HLattice``.  The default auxiliary neural network is a multi-layer perceptron (MLP) with three hidden layers and each hidden layer has 128 neurons.
+You can replace this neural network with a custom neural network.
+
+Suppose that you have a custom neural network ``MLP``.
+
+.. code-block:: python
+
+    import torch.nn as nn
+    import torch.nn.functional as F
+
+    class MLP(nn.Module):
+        def __init__(self, input_len, output_len, num_neuron):
+            super().__init__()
+            self.fc1 = nn.Linear(input_len, num_neuron)
+            self.fc2 = nn.Linear(num_neuron, output_len)
+
+        def forward(self, x):
+            x = self.fc1(x)
+            x = F.relu(x)
+            x = self.fc2(x)
+            x = torch.sigmoid(x)
+            return x
+
+The input length of this neural network must be the number of non-monotone features, and the output length must be the size of the lattice (i.e., the product of ``lattice_sizes`` in the following code).
+
+.. code-block:: python
+
+    # set monotonicity
+    num_input_dims = 2
+    lattice_sizes = torch.tensor([4], dtype=torch.long)
+    indices_increasing = [0]
+
+    # auxiliary neural network
+    input_len = num_input_dims - len(indices_increasing)
+    output_len = torch.prod(lattice_sizes).item()
+    ann = MLP(input_len, output_len, 32)
+
+    model = HLattice(num_input_dims,lattice_sizes,indices_increasing,ann)
+
+.. note::
+    If all input features are monotone (i.e., ``input_len`` is equal to zero in the above code), ``HLattice`` layer does not use the auxiliary neural network.  Therefore, the parameter ``neural_network`` in ``HLattice`` is ignored.
